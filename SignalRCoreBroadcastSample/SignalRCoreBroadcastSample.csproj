@@ -6,10 +6,15 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.0.0-alpha2-final" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
   </ItemGroup>
+
+  <Target Name="CopyTSClient" BeforeTargets="AfterBuild">
+    <Copy SourceFiles="$(MSBuildThisFileDirectory)\node_modules\@aspnet\signalr-client\dist\browser\signalr-clientES5-1.0.0-alpha2-final.min.js" DestinationFolder="$(MSBuildThisFileDirectory)wwwroot\lib\signalr-client" />
+  </Target>
 
 </Project>

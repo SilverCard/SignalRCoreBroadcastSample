@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "name": "signalrcorebroadcastsample",
+  "private": true,
+  "devDependencies": {
+  },
+  "dependencies": {
+    "@aspnet/signalr-client": "1.0.0-alpha2-final"
+  }
+}

@@ -1,20 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore;
+﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
+using SignalRCoreBroadcastSample.Hubs;
+using SignalRCoreBroadcastSample.Models;
+using System;
+using System.Threading.Tasks;
 
 namespace SignalRCoreBroadcastSample
 {
     public class Program
     {
+        static IWebHost _MainHost;
+
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            _MainHost = BuildWebHost(args);
+
+            var hc = _MainHost.Services.GetService<IHubContext<MainHub, IMainHub>>();
+            Task.Factory.StartNew(() => BroadcastLoop(hc));
+
+            _MainHost.Run();
+            
+
+        }
+
+        private static async Task BroadcastLoop(IHubContext<MainHub, IMainHub> ctx)
+        {
+            while (true)
+            {
+                await ctx.Clients.All.Broadcast(new Message
+                {
+                    TimeStamp = DateTime.Now,
+                    MessageString = $"The current time is {DateTime.Now}."
+                });
+                await Task.Delay(1000);
+            }
         }
 
         public static IWebHost BuildWebHost(string[] args) =>
